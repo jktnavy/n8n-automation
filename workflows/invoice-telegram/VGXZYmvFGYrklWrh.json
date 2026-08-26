@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-26T13:43:20.119Z",
+  "updatedAt": "2026-08-26T14:42:04.793Z",
   "createdAt": "2026-08-26T08:01:50.117Z",
   "id": "VGXZYmvFGYrklWrh",
   "name": "My workflow",
@@ -89,7 +89,7 @@
       "parameters": {
         "text": "={{$json.message_text}}",
         "schemaType": "manual",
-        "inputSchema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"customer_name\": {\n      \"type\": [\"string\", \"null\"],\n      \"description\": \"Nama customer atau perusahaan\"\n    },\n    \"pickup_location\": {\n      \"type\": [\"string\", \"null\"],\n      \"description\": \"Lokasi penjemputan\"\n    },\n    \"destination\": {\n      \"type\": [\"string\", \"null\"],\n      \"description\": \"Lokasi tujuan\"\n    },\n    \"departure_date\": {\n      \"type\": [\"string\", \"null\"],\n      \"description\": \"Tanggal keberangkatan dalam format YYYY-MM-DD jika dapat ditentukan\"\n    },\n    \"vehicle\": {\n      \"type\": [\"string\", \"null\"],\n      \"description\": \"Jenis kendaraan, misalnya Medium Bus, Big Bus, Hiace\"\n    },\n    \"quantity\": {\n      \"type\": [\"integer\", \"null\"],\n      \"description\": \"Jumlah unit kendaraan\"\n    },\n    \"unit_price\": {\n      \"type\": [\"number\", \"null\"],\n      \"description\": \"Harga per unit dalam Rupiah tanpa pemisah ribuan\"\n    },\n    \"included\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"string\"\n      },\n      \"description\": \"Komponen yang sudah termasuk harga\"\n    },\n    \"excluded\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"string\"\n      },\n      \"description\": \"Komponen yang tidak termasuk harga\"\n    },\n    \"payment_status\": {\n      \"type\": [\"string\", \"null\"],\n      \"description\": \"Status pembayaran, misalnya lunas, DP, atau belum dibayar\"\n    },\n    \"notes\": {\n      \"type\": [\"string\", \"null\"],\n      \"description\": \"Catatan tambahan\"\n    }\n  },\n  \"required\": [\n    \"customer_name\",\n    \"pickup_location\",\n    \"destination\",\n    \"departure_date\",\n    \"vehicle\",\n    \"quantity\",\n    \"unit_price\",\n    \"included\",\n    \"excluded\",\n    \"payment_status\",\n    \"notes\"\n  ],\n  \"additionalProperties\": false\n}",
+        "inputSchema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"customer_name\": {\n      \"type\": [\"string\", \"null\"],\n      \"description\": \"Nama customer atau perusahaan\"\n    },\n    \"pickup_location\": {\n      \"type\": [\"string\", \"null\"],\n      \"description\": \"Lokasi penjemputan\"\n    },\n    \"destination\": {\n      \"type\": [\"string\", \"null\"],\n      \"description\": \"Lokasi tujuan\"\n    },\n    \"departure_date\": {\n      \"type\": [\"string\", \"null\"],\n      \"description\": \"Tanggal keberangkatan dalam format YYYY-MM-DD jika dapat ditentukan\"\n    },\n    \"vehicle\": {\n      \"type\": [\"string\", \"null\"],\n      \"description\": \"Jenis kendaraan, misalnya Medium Bus, Big Bus, Hiace\"\n    },\n    \"quantity\": {\n      \"type\": [\"integer\", \"null\"],\n      \"description\": \"Jumlah unit kendaraan\"\n    },\n    \"unit_price\": {\n      \"type\": [\"number\", \"null\"],\n      \"description\": \"Harga per unit dalam Rupiah tanpa pemisah ribuan\"\n    },\n    \"included\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"string\"\n      },\n      \"description\": \"Komponen yang sudah termasuk harga\"\n    },\n    \"excluded\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"string\"\n      },\n      \"description\": \"Komponen yang tidak termasuk harga\"\n    },\n    \"payment_status\": {\n      \"type\": [\"string\", \"null\"],\n      \"description\": \"Status pembayaran, misalnya lunas, DP, atau belum dibayar\"\n    },\n    \"notes\": {\n      \"type\": [\"string\", \"null\"],\n      \"description\": \"Catatan tambahan\"\n    },\n\t\"return_date\": {\n\t  \"type\": [\"string\", \"null\"],\n\t  \"description\": \"Tanggal selesai atau tanggal pulang perjalanan dalam format YYYY-MM-DD jika tersedia\"\n\t}\n  },\n  \"required\": [\n    \"customer_name\",\n    \"pickup_location\",\n    \"destination\",\n    \"departure_date\",\n    \"vehicle\",\n    \"quantity\",\n    \"unit_price\",\n    \"included\",\n    \"excluded\",\n    \"payment_status\",\n    \"notes\",\n\t\"return_date\"\n  ],\n  \"additionalProperties\": false\n}",
         "options": {}
       },
       "type": "@n8n/n8n-nodes-langchain.informationExtractor",
@@ -182,6 +182,12 @@
               "name": "notes",
               "value": "={{ $json.output.notes }}",
               "type": "string"
+            },
+            {
+              "id": "d06c1f49-e62d-437c-be15-d9a00eaf1249",
+              "name": "return_date",
+              "value": "={{ $json.output.return_date }}",
+              "type": "string"
             }
           ]
         },
@@ -273,9 +279,9 @@
     {
       "parameters": {
         "operation": "executeQuery",
-        "query": "insert into public.invoices (\n    invoice_number,\n    invoice_sequence,\n    invoice_date,\n    customer_name,\n    pickup_location,\n    destination,\n    departure_date,\n    subtotal,\n    total,\n    payment_status,\n    included,\n    excluded,\n    notes\n)\nvalues (\n    $1,\n    $2,\n    $3::date,\n    $4,\n    $5,\n    $6,\n    $7::date,\n    $8,\n    $9,\n    $10,\n    $11::jsonb,\n    $12::jsonb,\n    $13\n)\nreturning\n    id,\n    invoice_number,\n    created_at;",
+        "query": "insert into public.invoices (\n    invoice_number,\n    invoice_sequence,\n    invoice_date,\n    customer_name,\n    pickup_location,\n    destination,\n    departure_date,\n    return_date,\n    subtotal,\n    total,\n    payment_status,\n    included,\n    excluded,\n    notes\n)\nvalues (\n    $1,\n    $2,\n    $3::date,\n    $4,\n    $5,\n    $6,\n    $7::date,\n    $8::date,\n    $9,\n    $10,\n    $11,\n    $12::jsonb,\n    $13::jsonb,\n    $14\n)\nreturning\n    id,\n    invoice_number,\n    created_at;",
         "options": {
-          "queryReplacement": "={{ [   $json.invoice_number,   $json.sequence_no,   $json.invoice_date,   $json.customer_name,   $json.pickup_location,   $json.destination,   $json.departure_date,   Number($json.subtotal),   Number($json.total),   $json.payment_status,   JSON.stringify($json.included),   JSON.stringify($json.excluded),   $json.notes ] }}"
+          "queryReplacement": "={{\n[\n  $json.invoice_number,\n  $json.sequence_no,\n  $json.invoice_date,\n  $json.customer_name,\n  $json.pickup_location,\n  $json.destination,\n  $json.departure_date,\n  $json.return_date,\n  Number($json.subtotal),\n  Number($json.total),\n  $json.payment_status,\n  JSON.stringify($json.included),\n  JSON.stringify($json.excluded),\n  $json.notes\n]\n}}"
         }
       },
       "type": "n8n-nodes-base.postgres",
@@ -319,7 +325,7 @@
     {
       "parameters": {
         "mode": "runOnceForEachItem",
-        "jsCode": "const invoice = $('Merge Invoice Data').item.json;\nconst savedInvoice = $('Save Invoice').item.json;\nconst telegram = $('Edit Fields').item.json;\n\nconst payload = {\n  invoice_id: savedInvoice.id,\n  invoice_number: savedInvoice.invoice_number,\n\n  invoice_date: invoice.invoice_date,\n\n  customer_name: invoice.customer_name,\n\n  pickup_location: invoice.pickup_location,\n  destination: invoice.destination,\n  departure_date: invoice.departure_date,\n\n  vehicle: invoice.vehicle,\n  quantity: Number(invoice.quantity),\n  unit_price: Number(invoice.unit_price),\n\n  subtotal: Number(invoice.subtotal),\n  total: Number(invoice.total),\n\n  included: invoice.included || [],\n  excluded: invoice.excluded || [],\n\n  payment_status: invoice.payment_status,\n  notes: invoice.notes\n};\n\nreturn {\n  json: {\n    invoice_id: savedInvoice.id,\n    invoice_number: savedInvoice.invoice_number,\n    chat_id: telegram.chat_id,\n\n    payload_base64: Buffer\n      .from(JSON.stringify(payload), 'utf8')\n      .toString('base64')\n  }\n};"
+        "jsCode": "const invoice = $('Merge Invoice Data').item.json;\nconst savedInvoice = $('Save Invoice').item.json;\nconst telegram = $('Edit Fields').item.json;\n\nconst payload = {\n  invoice_id: savedInvoice.id,\n  invoice_number: savedInvoice.invoice_number,\n\n  invoice_date: invoice.invoice_date,\n\n  customer_name: invoice.customer_name,\n\n  pickup_location: invoice.pickup_location,\n  destination: invoice.destination,\n  departure_date: invoice.departure_date,\n  return_date: invoice.return_date || null,\n\n  vehicle: invoice.vehicle,\n  quantity: Number(invoice.quantity),\n  unit_price: Number(invoice.unit_price),\n\n  subtotal: Number(invoice.subtotal),\n  total: Number(invoice.total),\n\n  included: invoice.included || [],\n  excluded: invoice.excluded || [],\n\n  payment_status: invoice.payment_status,\n  notes: invoice.notes\n};\n\nreturn {\n  json: {\n    invoice_id: savedInvoice.id,\n    invoice_number: savedInvoice.invoice_number,\n    chat_id: telegram.chat_id,\n\n    payload_base64: Buffer\n      .from(JSON.stringify(payload), 'utf8')\n      .toString('base64')\n  }\n};"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -382,6 +388,44 @@
           "name": "Telegram account"
         }
       }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Edit Fields').item.json.chat_id }}",
+        "text": "={{$json.message}}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1392,
+        384
+      ],
+      "id": "fe6ff4d7-688a-4d09-ac2e-f1c2301b31b7",
+      "name": "Send a text message",
+      "webhookId": "7b777fc2-60da-47f5-9483-3cdbd0993e16",
+      "credentials": {
+        "telegramApi": {
+          "id": "vPnqCbsh1nk853zE",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const missing = [];\n\nif (!$json.customer_name) missing.push('Nama customer');\nif (!$json.vehicle) missing.push('Jenis kendaraan');\nif (!Number($json.quantity)) missing.push('Jumlah unit');\nif (!Number($json.unit_price)) missing.push('Harga per unit');\nif (!$json.pickup_location) missing.push('Lokasi jemput');\nif (!$json.destination) missing.push('Tujuan');\nif (!$json.departure_date) missing.push('Tanggal keberangkatan');\n\nreturn {\n  json: {\n    missing,\n    message:\n      'Data invoice belum lengkap.\\n\\nYang masih kurang:\\n- ' +\n      missing.join('\\n- ') +\n      '\\n\\nSilakan kirim ulang data invoice yang lengkap.'\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1088,
+        400
+      ],
+      "id": "b6fb38ef-eb2d-4590-b2da-9757ad329a35",
+      "name": "Build Validation Error"
     },
     {
       "parameters": {
@@ -460,6 +504,16 @@
                 "operation": "notEmpty",
                 "singleValue": true
               }
+            },
+            {
+              "id": "15dc280d-f58c-47ed-94d8-a5e0ce63ddda",
+              "leftValue": "",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
             }
           ],
           "combinator": "and"
@@ -473,45 +527,7 @@
         368
       ],
       "id": "f7a2168e-6a19-4b7c-885a-4d373bbcceba",
-      "name": "If"
-    },
-    {
-      "parameters": {
-        "chatId": "={{ $('Edit Fields').item.json.chat_id }}",
-        "text": "={{$json.message}}",
-        "additionalFields": {
-          "appendAttribution": false
-        }
-      },
-      "type": "n8n-nodes-base.telegram",
-      "typeVersion": 1.2,
-      "position": [
-        1392,
-        384
-      ],
-      "id": "fe6ff4d7-688a-4d09-ac2e-f1c2301b31b7",
-      "name": "Send a text message",
-      "webhookId": "7b777fc2-60da-47f5-9483-3cdbd0993e16",
-      "credentials": {
-        "telegramApi": {
-          "id": "vPnqCbsh1nk853zE",
-          "name": "Telegram account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "mode": "runOnceForEachItem",
-        "jsCode": "const missing = [];\n\nif (!$json.customer_name) missing.push('Nama customer');\nif (!$json.vehicle) missing.push('Jenis kendaraan');\nif (!Number($json.quantity)) missing.push('Jumlah unit');\nif (!Number($json.unit_price)) missing.push('Harga per unit');\nif (!$json.pickup_location) missing.push('Lokasi jemput');\nif (!$json.destination) missing.push('Tujuan');\nif (!$json.departure_date) missing.push('Tanggal keberangkatan');\n\nreturn {\n  json: {\n    missing,\n    message:\n      'Data invoice belum lengkap.\\n\\nYang masih kurang:\\n- ' +\n      missing.join('\\n- ') +\n      '\\n\\nSilakan kirim ulang data invoice yang lengkap.'\n  }\n};"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        1088,
-        400
-      ],
-      "id": "b6fb38ef-eb2d-4590-b2da-9757ad329a35",
-      "name": "Build Validation Error"
+      "name": "Validate Invoice ( IF )"
     }
   ],
   "connections": {
@@ -563,7 +579,7 @@
       "main": [
         [
           {
-            "node": "If",
+            "node": "Validate Invoice ( IF )",
             "type": "main",
             "index": 0
           }
@@ -663,7 +679,23 @@
         ]
       ]
     },
-    "If": {
+    "Send a text message": {
+      "main": [
+        []
+      ]
+    },
+    "Build Validation Error": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Invoice ( IF )": {
       "main": [
         [
           {
@@ -675,22 +707,6 @@
         [
           {
             "node": "Build Validation Error",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Send a text message": {
-      "main": [
-        []
-      ]
-    },
-    "Build Validation Error": {
-      "main": [
-        [
-          {
-            "node": "Send a text message",
             "type": "main",
             "index": 0
           }
@@ -709,9 +725,9 @@
   },
   "nodeGroups": [],
   "pinData": {},
-  "versionId": "14b31ea4-d55c-45db-9e4a-54d36407a35e",
+  "versionId": "a3e23c0d-9d76-4630-af14-664601d8df03",
   "activeVersionId": null,
-  "versionCounter": 205,
+  "versionCounter": 223,
   "triggerCount": 0,
   "sourceWorkflowId": null,
   "tags": [],

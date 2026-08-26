@@ -1,118 +1,572 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <title>{{ invoice_number }}</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 40px;
-      color: #222;
-    }
+<meta charset="UTF-8">
+<title>{{ invoice_number }}</title>
 
-    h1 {
-      margin-bottom: 4px;
-    }
+<style>
+@page {
+    size: A4;
+    margin: 14mm 16mm 15mm 16mm;
+}
 
-    .meta {
-      margin-bottom: 30px;
-    }
+* {
+    box-sizing: border-box;
+}
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-    }
+html, body {
+    margin: 0;
+    padding: 0;
+}
 
-    th, td {
-      border: 1px solid #ddd;
-      padding: 10px;
-      text-align: left;
-    }
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    color: #20242a;
+    font-size: 11px;
+    line-height: 1.45;
+}
 
-    th {
-      background: #f5f5f5;
-    }
+/* =========================
+   HEADER
+========================= */
 
-    .right {
-      text-align: right;
-    }
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 18px;
+    border-bottom: 2px solid #20242a;
+}
 
-    .total {
-      font-size: 18px;
-      font-weight: bold;
-    }
-  </style>
+.logo {
+    width: 185px;
+    height: auto;
+    object-fit: contain;
+    display: block;
+}
+
+.invoice-heading {
+    text-align: right;
+}
+
+.invoice-heading h1 {
+    margin: 0;
+    font-size: 30px;
+    line-height: 1;
+    letter-spacing: 1.5px;
+    font-weight: 700;
+}
+
+.invoice-number {
+    margin-top: 10px;
+    font-size: 11px;
+}
+
+.invoice-date {
+    margin-top: 3px;
+    color: #59616b;
+}
+
+/* =========================
+   CUSTOMER
+========================= */
+
+.customer-section {
+    display: flex;
+    justify-content: space-between;
+    gap: 32px;
+    margin-top: 24px;
+    margin-bottom: 22px;
+}
+
+.section-label {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #747c86;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.customer-name {
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.trip-info {
+    min-width: 280px;
+}
+
+.info-row {
+    display: flex;
+    margin-bottom: 3px;
+}
+
+.info-label {
+    width: 105px;
+    color: #656d76;
+}
+
+.info-value {
+    font-weight: 600;
+    flex: 1;
+}
+
+/* =========================
+   ITEM TABLE
+========================= */
+
+.items {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 4px;
+}
+
+.items thead th {
+    padding: 9px 10px;
+    background: #f1f3f5;
+    border-top: 1px solid #ccd1d6;
+    border-bottom: 1px solid #ccd1d6;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    text-align: left;
+}
+
+.items tbody td {
+    padding: 12px 10px;
+    border-bottom: 1px solid #dce0e4;
+}
+
+.items .qty {
+    width: 60px;
+    text-align: center;
+}
+
+.items .money {
+    width: 135px;
+    text-align: right;
+    white-space: nowrap;
+}
+
+/* =========================
+   TOTAL
+========================= */
+
+.summary-wrap {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 12px;
+}
+
+.summary {
+    width: 310px;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 0;
+}
+
+.summary-row.total {
+    margin-top: 5px;
+    padding-top: 9px;
+    border-top: 2px solid #20242a;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.payment-status {
+    text-transform: capitalize;
+}
+
+/* =========================
+   TERBILANG
+========================= */
+
+.terbilang {
+    margin-top: 18px;
+    padding: 10px 12px;
+    border-left: 3px solid #20242a;
+    background: #f7f8f9;
+}
+
+.terbilang-title {
+    font-size: 9px;
+    color: #747c86;
+    text-transform: uppercase;
+    letter-spacing: .8px;
+    font-weight: 700;
+}
+
+.terbilang-value {
+    margin-top: 3px;
+    font-style: italic;
+    font-weight: 600;
+}
+
+/* =========================
+   DETAILS
+========================= */
+
+.details-grid {
+    display: flex;
+    gap: 24px;
+    margin-top: 24px;
+}
+
+.details-column {
+    flex: 1;
+}
+
+.details-title {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .7px;
+    margin-bottom: 7px;
+}
+
+.details-list {
+    margin: 0;
+    padding-left: 17px;
+}
+
+.details-list li {
+    margin-bottom: 3px;
+}
+
+/* =========================
+   PAYMENT + SIGNATURE
+========================= */
+
+.bottom-area {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 40px;
+    margin-top: 28px;
+    page-break-inside: avoid;
+}
+
+.bank-box {
+    width: 48%;
+    padding: 14px 16px;
+    border: 1px solid #ccd1d6;
+}
+
+.bank-box-title {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .8px;
+    margin-bottom: 9px;
+}
+
+.bank-name {
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.bank-account {
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: .6px;
+    margin-top: 3px;
+}
+
+.bank-holder {
+    margin-top: 3px;
+    color: #59616b;
+}
+
+.signature {
+    width: 270px;
+    margin-left: auto;
+    text-align: center;
+}
+
+.signature-date {
+    text-align: center;
+    font-size: 11px;
+    margin-bottom: 4px;
+}
+
+.signature-greeting {
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.signature-stack {
+    position: relative;
+    width: 170px;
+    height: 120px;
+    margin: 0 auto;
+}
+
+.stamp-img {
+    position: absolute;
+    width: 105px;
+    height: 105px;
+    object-fit: contain;
+    left: 28px;
+    top: 8px;
+    opacity: .78;
+    z-index: 1;
+}
+
+.signature-img {
+    position: absolute;
+    width: 145px;
+    max-height: 90px;
+    object-fit: contain;
+    left: 18px;
+    top: 18px;
+    z-index: 2;
+}
+
+.signature-name {
+    margin-top: 3px;
+    font-weight: 700;
+    font-size: 13px;
+}
+
+.signature-position {
+    margin-top: 2px;
+    font-size: 10px;
+    color: #6b7280;
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+.footer {
+    position: fixed;
+    bottom: -4mm;
+    left: 0;
+    right: 0;
+    border-top: 1px solid #d7dadd;
+    padding-top: 7px;
+    font-size: 8px;
+    color: #6b7280;
+    text-align: center;
+    line-height: 1.5;
+}
+</style>
 </head>
 
 <body>
 
-<h1>INVOICE</h1>
+<header class="header">
 
-<div class="meta">
-  <div>No: {{ invoice_number }}</div>
-  <div>Tanggal: {{ invoice_date }}</div>
-</div>
+    <div>
+        <img src="{{ logo_path }}" class="logo" alt="STA Transport">
+    </div>
 
-<h3>Kepada</h3>
+    <div class="invoice-heading">
+        <h1>INVOICE</h1>
 
-<p>
-  <strong>{{ customer_name }}</strong>
-</p>
+        <div class="invoice-number">
+            <strong>{{ invoice_number }}</strong>
+        </div>
 
-<h3>Detail Perjalanan</h3>
+        <div class="invoice-date">
+            {{ invoice_date_formatted }}
+        </div>
+    </div>
 
-<p>
-  Penjemputan: {{ pickup_location }}<br>
-  Tujuan: {{ destination }}<br>
-  Tanggal: {{ departure_date }}
-</p>
+</header>
 
-<table>
-  <thead>
-    <tr>
-      <th>Deskripsi</th>
-      <th>Qty</th>
-      <th>Harga</th>
-      <th>Subtotal</th>
-    </tr>
-  </thead>
 
-  <tbody>
-    <tr>
-      <td>{{ vehicle }}</td>
-      <td>{{ quantity }}</td>
-      <td class="right">Rp {{ unit_price_formatted }}</td>
-      <td class="right">Rp {{ subtotal_formatted }}</td>
-    </tr>
-  </tbody>
+<section class="customer-section">
+
+    <div>
+        <div class="section-label">Invoice Kepada</div>
+        <div class="customer-name">{{ customer_name }}</div>
+    </div>
+
+    <div class="trip-info">
+
+        <div class="section-label">Detail Perjalanan</div>
+
+        <div class="info-row">
+            <div class="info-label">Penjemputan</div>
+            <div class="info-value">{{ pickup_location }}</div>
+        </div>
+
+        <div class="info-row">
+            <div class="info-label">Tujuan</div>
+            <div class="info-value">{{ destination }}</div>
+        </div>
+
+        <div class="info-row">
+            <div class="info-label">Perjalanan</div>
+            <div class="info-value">{{ trip_period_formatted }}</div>
+        </div>
+
+        {% if durasi_hari %}
+        <div class="info-row">
+            <div class="info-label">Durasi</div>
+            <div class="info-value">{{ durasi_hari }} hari</div>
+        </div>
+        {% endif %}
+
+    </div>
+
+</section>
+
+
+<table class="items">
+
+    <thead>
+        <tr>
+            <th>Deskripsi</th>
+            <th class="qty">Qty</th>
+            <th class="money">Harga / Unit</th>
+            <th class="money">Subtotal</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <tr>
+            <td><strong>{{ vehicle }}</strong></td>
+            <td class="qty">{{ quantity }}</td>
+            <td class="money">Rp {{ unit_price_formatted }}</td>
+            <td class="money">Rp {{ subtotal_formatted }}</td>
+        </tr>
+    </tbody>
+
 </table>
 
-<p class="total">
-  Total: Rp {{ total_formatted }}
-</p>
 
-<p>
-  Status Pembayaran: {{ payment_status }}
-</p>
+<div class="summary-wrap">
 
-{% if included %}
-<h4>Termasuk</h4>
-<ul>
-{% for item in included %}
-  <li>{{ item }}</li>
-{% endfor %}
-</ul>
-{% endif %}
+    <div class="summary">
 
-{% if excluded %}
-<h4>Tidak Termasuk</h4>
-<ul>
-{% for item in excluded %}
-  <li>{{ item }}</li>
-{% endfor %}
-</ul>
-{% endif %}
+        <div class="summary-row">
+            <span>Status Pembayaran</span>
+            <strong class="payment-status">{{ payment_status }}</strong>
+        </div>
+
+        <div class="summary-row total">
+            <span>TOTAL</span>
+            <span>Rp {{ total_formatted }}</span>
+        </div>
+
+    </div>
+
+</div>
+
+
+<div class="terbilang">
+
+    <div class="terbilang-title">
+        Terbilang
+    </div>
+
+    <div class="terbilang-value">
+        {{ terbilang }}
+    </div>
+
+</div>
+
+
+<div class="details-grid">
+
+    {% if included_sentence %}
+    <div class="details-column">
+        <div class="details-title">Keterangan Harga</div>
+        <p>
+            <strong>Harga sudah termasuk</strong> {{ included_sentence }}.
+        </p>
+    </div>
+    {% endif %}
+
+    {% if excluded_sentence %}
+    <div class="details-column">
+        <div class="details-title">Pengecualian</div>
+        <p>
+            <strong>Harga tidak termasuk</strong> {{ excluded_sentence }}.
+        </p>
+    </div>
+    {% endif %}
+
+</div>
+
+
+<div class="bottom-area">
+
+    <div class="bank-box">
+
+        <div class="bank-box-title">
+            Informasi Pembayaran
+        </div>
+
+        <div class="bank-name">
+            BCA
+        </div>
+
+        <div class="bank-account">
+            406 061 5352
+        </div>
+
+        <div class="bank-holder">
+            a.n. Suhendi
+        </div>
+
+    </div>
+
+
+    <div class="signature">
+
+        <div class="signature-date">
+            Jakarta, {{ invoice_date_long }}
+        </div>
+
+        <div class="signature-greeting">
+            Hormat kami,
+        </div>
+
+        <div class="signature-stack">
+            <img
+                src="{{ stamp_path }}"
+                class="stamp-img"
+                alt="Cap STA Transport">
+
+            <img
+                src="{{ signature_path }}"
+                class="signature-img"
+                alt="Tanda tangan Suhendi">
+        </div>
+
+        <div class="signature-name">
+            Suhendi
+        </div>
+
+        <div class="signature-position">
+            Marketing Executive
+        </div>
+
+    </div>
+
+</div>
+
+
+<footer class="footer">
+
+    Jl. Akses Tol Cimanggis No. 73, Leuwinanggung, Tapos, Depok 16456
+    &nbsp; • &nbsp;
+    WhatsApp 0812-840-21376
+    <br>
+
+    statransdotcom@gmail.com
+    &nbsp; • &nbsp;
+    www.statransport.co.id
+
+</footer>
 
 </body>
 </html>
