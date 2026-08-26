@@ -155,7 +155,15 @@ def main():
     decoded = base64.b64decode(sys.argv[1]).decode("utf-8")
     data = json.loads(decoded)
 
-    data["unit_price_formatted"] = rupiah(data["unit_price"])
+    for item in data.get("items", []):
+        item["unit_price_formatted"] = rupiah(item["unit_price"])
+        item["subtotal_formatted"] = rupiah(item["subtotal"])
+
+        if item.get("price_basis") == "per_day":
+            item["price_basis_label"] = "per hari"
+        else:
+            item["price_basis_label"] = "per perjalanan"
+
     data["subtotal_formatted"] = rupiah(data["subtotal"])
     data["total_formatted"] = rupiah(data["total"])
 

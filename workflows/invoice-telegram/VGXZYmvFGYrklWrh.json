@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-26T14:47:02.084Z",
+  "updatedAt": "2026-08-26T15:16:48.316Z",
   "createdAt": "2026-08-26T08:01:50.117Z",
   "id": "VGXZYmvFGYrklWrh",
   "name": "STA Transport - Telegram Invoice",
@@ -89,8 +89,10 @@
       "parameters": {
         "text": "={{$json.message_text}}",
         "schemaType": "manual",
-        "inputSchema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"customer_name\": {\n      \"type\": [\"string\", \"null\"],\n      \"description\": \"Nama customer atau perusahaan\"\n    },\n    \"pickup_location\": {\n      \"type\": [\"string\", \"null\"],\n      \"description\": \"Lokasi penjemputan\"\n    },\n    \"destination\": {\n      \"type\": [\"string\", \"null\"],\n      \"description\": \"Lokasi tujuan\"\n    },\n    \"departure_date\": {\n      \"type\": [\"string\", \"null\"],\n      \"description\": \"Tanggal keberangkatan dalam format YYYY-MM-DD jika dapat ditentukan\"\n    },\n    \"vehicle\": {\n      \"type\": [\"string\", \"null\"],\n      \"description\": \"Jenis kendaraan, misalnya Medium Bus, Big Bus, Hiace\"\n    },\n    \"quantity\": {\n      \"type\": [\"integer\", \"null\"],\n      \"description\": \"Jumlah unit kendaraan\"\n    },\n    \"unit_price\": {\n      \"type\": [\"number\", \"null\"],\n      \"description\": \"Harga per unit dalam Rupiah tanpa pemisah ribuan\"\n    },\n    \"included\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"string\"\n      },\n      \"description\": \"Komponen yang sudah termasuk harga\"\n    },\n    \"excluded\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"string\"\n      },\n      \"description\": \"Komponen yang tidak termasuk harga\"\n    },\n    \"payment_status\": {\n      \"type\": [\"string\", \"null\"],\n      \"description\": \"Status pembayaran, misalnya lunas, DP, atau belum dibayar\"\n    },\n    \"notes\": {\n      \"type\": [\"string\", \"null\"],\n      \"description\": \"Catatan tambahan\"\n    },\n\t\"return_date\": {\n\t  \"type\": [\"string\", \"null\"],\n\t  \"description\": \"Tanggal selesai atau tanggal pulang perjalanan dalam format YYYY-MM-DD jika tersedia\"\n\t}\n  },\n  \"required\": [\n    \"customer_name\",\n    \"pickup_location\",\n    \"destination\",\n    \"departure_date\",\n    \"vehicle\",\n    \"quantity\",\n    \"unit_price\",\n    \"included\",\n    \"excluded\",\n    \"payment_status\",\n    \"notes\",\n\t\"return_date\"\n  ],\n  \"additionalProperties\": false\n}",
-        "options": {}
+        "inputSchema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"customer_name\": {\n      \"type\": [\"string\", \"null\"],\n      \"description\": \"Nama customer atau perusahaan\"\n    },\n    \"pickup_location\": {\n      \"type\": [\"string\", \"null\"],\n      \"description\": \"Lokasi penjemputan\"\n    },\n    \"destination\": {\n      \"type\": [\"string\", \"null\"],\n      \"description\": \"Lokasi tujuan\"\n    },\n    \"departure_date\": {\n      \"type\": [\"string\", \"null\"],\n      \"description\": \"Tanggal keberangkatan dalam format YYYY-MM-DD jika dapat ditentukan\"\n    },\n\t\"items\": {\n\t  \"type\": \"array\",\n\t  \"description\": \"Daftar kendaraan yang disewa\",\n\t  \"items\": {\n\t\t\"type\": \"object\",\n\t\t\"properties\": {\n\t\t  \"vehicle\": {\n\t\t\t\"type\": \"string\",\n\t\t\t\"description\": \"Jenis kendaraan\"\n\t\t  },\n\t\t  \"quantity\": {\n\t\t\t\"type\": \"integer\",\n\t\t\t\"description\": \"Jumlah unit kendaraan\"\n\t\t  },\n\t\t  \"unit_price\": {\n\t\t\t\"type\": \"number\",\n\t\t\t\"description\": \"Harga per unit tanpa format Rupiah\"\n\t\t  },\n\t\t\t\"price_basis\": {\n\t\t\t  \"type\": \"string\",\n\t\t\t  \"enum\": [\"per_trip\", \"per_day\"],\n\t\t\t  \"description\": \"Gunakan per_day jika harga berlaku per hari atau perjalanan berlangsung beberapa hari dan harga disebut sebagai harga harian. Gunakan per_trip hanya jika harga adalah harga paket sekali perjalanan tanpa perhitungan berdasarkan jumlah hari.\"\n\t\t\t}\n\t\t},\n\t\t\"required\": [\n\t\t  \"vehicle\",\n\t\t  \"quantity\",\n\t\t  \"unit_price\",\n\t\t  \"price_basis\"\n\t\t]\n\t  }\n\t},\n    \"included\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"string\"\n      },\n      \"description\": \"Komponen yang sudah termasuk harga\"\n    },\n    \"excluded\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"string\"\n      },\n      \"description\": \"Komponen yang tidak termasuk harga\"\n    },\n    \"payment_status\": {\n      \"type\": [\"string\", \"null\"],\n      \"description\": \"Status pembayaran, misalnya lunas, DP, atau belum dibayar\"\n    },\n    \"notes\": {\n      \"type\": [\"string\", \"null\"],\n      \"description\": \"Catatan tambahan\"\n    },\n\t\"return_date\": {\n\t  \"type\": [\"string\", \"null\"],\n\t  \"description\": \"Tanggal selesai atau tanggal pulang perjalanan dalam format YYYY-MM-DD jika tersedia\"\n\t}\n  },\n  \"required\": [\n    \"customer_name\",\n    \"pickup_location\",\n    \"destination\",\n    \"departure_date\",\n\t\"items\",\n    \"included\",\n    \"excluded\",\n    \"payment_status\",\n    \"notes\",\n\t\"return_date\"\n  ],\n  \"additionalProperties\": false\n}",
+        "options": {
+          "systemPromptTemplate": "=ATURAN HARGA:\n- Jika pengguna menulis \"per hari\", \"/hari\", \"per unit per hari\", atau harga berlaku untuk setiap hari perjalanan, set price_basis = \"per_day\".\n- Jika pengguna menyebut harga paket untuk seluruh perjalanan tanpa perhitungan per hari, set price_basis = \"per_trip\".\n- Jangan mengubah harga menjadi total. unit_price harus tetap harga satu unit sesuai basis harga."
+        }
       },
       "type": "@n8n/n8n-nodes-langchain.informationExtractor",
       "typeVersion": 1.2,
@@ -100,107 +102,6 @@
       ],
       "id": "225e809c-ce2d-4153-99bc-43d863ebc95a",
       "name": "Information Extractor"
-    },
-    {
-      "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "id": "4c53414e-8675-40fd-9e9c-138f1af33eca",
-              "name": "customer_name",
-              "value": "={{ $json.output.customer_name }}",
-              "type": "string"
-            },
-            {
-              "id": "005fe754-9b4f-47ab-a09f-ba2828f82fd8",
-              "name": "vehicle",
-              "value": "={{ $json.output.vehicle }}",
-              "type": "string"
-            },
-            {
-              "id": "b0349828-ff85-49a9-8d53-1c1f220ea126",
-              "name": "quantity",
-              "value": "={{ $json.output.quantity }}",
-              "type": "number"
-            },
-            {
-              "id": "d7364054-53f4-415c-853c-e87cab2473b4",
-              "name": "unit_price",
-              "value": "={{ $json.output.unit_price }}",
-              "type": "number"
-            },
-            {
-              "id": "70e71cca-fe12-4e1e-a8ab-4d1e734ba2a1",
-              "name": "subtotal",
-              "value": "={{ Number($json.output.quantity) * Number($json.output.unit_price) }}",
-              "type": "number"
-            },
-            {
-              "id": "27e09b7a-6b80-444f-b8ee-63afb41f9fd0",
-              "name": "total",
-              "value": "={{ Number($json.output.quantity) * Number($json.output.unit_price) }}",
-              "type": "number"
-            },
-            {
-              "id": "deec7c0d-1548-4bca-a11a-b197da51c20c",
-              "name": "pickup_location",
-              "value": "={{ $json.output.pickup_location }}",
-              "type": "string"
-            },
-            {
-              "id": "4e1744d6-3a21-46c6-bf70-21718a16f7d9",
-              "name": "destination",
-              "value": "={{ $json.output.destination }}",
-              "type": "string"
-            },
-            {
-              "id": "8d78433a-9cef-4897-976d-3beaf8471fd1",
-              "name": "departure_date",
-              "value": "={{ $json.output.departure_date }}",
-              "type": "string"
-            },
-            {
-              "id": "a961d46c-5770-4cda-91e4-9d3d8618b3f0",
-              "name": "included",
-              "value": "={{ $json.output.included }}",
-              "type": "array"
-            },
-            {
-              "id": "57dbcd5d-7359-4264-8026-b46d667b04c5",
-              "name": "excluded",
-              "value": "={{ $json.output.excluded }}",
-              "type": "array"
-            },
-            {
-              "id": "f4b2a74e-b36f-40b1-be00-8803f6618731",
-              "name": "payment_status",
-              "value": "={{ $json.output.payment_status }}",
-              "type": "string"
-            },
-            {
-              "id": "40f6189b-34f8-4d01-8b41-78f9ead4cf11",
-              "name": "notes",
-              "value": "={{ $json.output.notes }}",
-              "type": "string"
-            },
-            {
-              "id": "d06c1f49-e62d-437c-be15-d9a00eaf1249",
-              "name": "return_date",
-              "value": "={{ $json.output.return_date }}",
-              "type": "string"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.5,
-      "position": [
-        800,
-        176
-      ],
-      "id": "8ce599e9-fd3a-4cc4-8855-4afd526a110c",
-      "name": "Calculate Invoice"
     },
     {
       "parameters": {
@@ -302,15 +203,15 @@
     {
       "parameters": {
         "operation": "executeQuery",
-        "query": "insert into public.invoice_items (\n    invoice_id,\n    description,\n    quantity,\n    unit_price,\n    subtotal\n)\nvalues (\n    $1,\n    $2,\n    $3,\n    $4,\n    $5\n)\nreturning\n    id,\n    invoice_id,\n    description,\n    quantity,\n    unit_price,\n    subtotal,\n    created_at;",
+        "query": "insert into public.invoice_items (\n    invoice_id,\n    description,\n    quantity,\n    unit_price,\n    days,\n    price_basis,\n    subtotal\n)\nvalues (\n    $1,\n    $2,\n    $3,\n    $4,\n    $5,\n    $6,\n    $7\n)\nreturning id;",
         "options": {
-          "queryReplacement": "={{ [   $json.id,   $('Merge Invoice Data').item.json.vehicle,   Number($('Merge Invoice Data').item.json.quantity),   Number($('Merge Invoice Data').item.json.unit_price),   Number($('Merge Invoice Data').item.json.subtotal) ] }}"
+          "queryReplacement": "={{\n[\n  $json.invoice_id,\n  $json.description,\n  $json.quantity,\n  $json.unit_price,\n  $json.days,\n  $json.price_basis,\n  $json.subtotal\n]\n}}"
         }
       },
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.7,
       "position": [
-        2144,
+        2368,
         80
       ],
       "id": "3466890a-df93-47ce-90ef-98223ca13264",
@@ -325,12 +226,12 @@
     {
       "parameters": {
         "mode": "runOnceForEachItem",
-        "jsCode": "const invoice = $('Merge Invoice Data').item.json;\nconst savedInvoice = $('Save Invoice').item.json;\nconst telegram = $('Edit Fields').item.json;\n\nconst payload = {\n  invoice_id: savedInvoice.id,\n  invoice_number: savedInvoice.invoice_number,\n\n  invoice_date: invoice.invoice_date,\n\n  customer_name: invoice.customer_name,\n\n  pickup_location: invoice.pickup_location,\n  destination: invoice.destination,\n  departure_date: invoice.departure_date,\n  return_date: invoice.return_date || null,\n\n  vehicle: invoice.vehicle,\n  quantity: Number(invoice.quantity),\n  unit_price: Number(invoice.unit_price),\n\n  subtotal: Number(invoice.subtotal),\n  total: Number(invoice.total),\n\n  included: invoice.included || [],\n  excluded: invoice.excluded || [],\n\n  payment_status: invoice.payment_status,\n  notes: invoice.notes\n};\n\nreturn {\n  json: {\n    invoice_id: savedInvoice.id,\n    invoice_number: savedInvoice.invoice_number,\n    chat_id: telegram.chat_id,\n\n    payload_base64: Buffer\n      .from(JSON.stringify(payload), 'utf8')\n      .toString('base64')\n  }\n};"
+        "jsCode": "const invoice = $('Merge Invoice Data').item.json;\nconst savedInvoice = $('Save Invoice').item.json;\nconst telegram = $('Edit Fields').item.json;\n\nconst payload = {\n  invoice_id: savedInvoice.id,\n  invoice_number: savedInvoice.invoice_number,\n  invoice_date: invoice.invoice_date,\n\n  customer_name: invoice.customer_name,\n  pickup_location: invoice.pickup_location,\n  destination: invoice.destination,\n\n  departure_date: invoice.departure_date,\n  return_date: invoice.return_date || null,\n\n  duration_days: invoice.duration_days,\n\n  items: invoice.items || [],\n\n  subtotal: Number(invoice.subtotal),\n  total: Number(invoice.total),\n\n  included: invoice.included || [],\n  excluded: invoice.excluded || [],\n\n  payment_status: invoice.payment_status,\n  notes: invoice.notes\n};\n\nreturn {\n  json: {\n    invoice_id: savedInvoice.id,\n    invoice_number: savedInvoice.invoice_number,\n    chat_id: telegram.chat_id,\n\n    payload_base64: Buffer\n      .from(JSON.stringify(payload), 'utf8')\n      .toString('base64')\n  }\n};"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        2368,
+        2592,
         80
       ],
       "id": "9e6d3241-e04d-439e-bde8-6f96c52f18e8",
@@ -343,7 +244,7 @@
       "type": "n8n-nodes-base.executeCommand",
       "typeVersion": 1,
       "position": [
-        2592,
+        2816,
         80
       ],
       "id": "456e2fe0-7754-4bb5-b4bc-951527c6ed23",
@@ -357,7 +258,7 @@
       "type": "n8n-nodes-base.readWriteFile",
       "typeVersion": 1.1,
       "position": [
-        2816,
+        3040,
         80
       ],
       "id": "658a674c-fd95-46ef-bfa1-0c22850f181e",
@@ -376,7 +277,7 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        3040,
+        3264,
         80
       ],
       "id": "736110d8-a0f3-4d15-8f2d-241ee8ef601b",
@@ -416,7 +317,7 @@
     {
       "parameters": {
         "mode": "runOnceForEachItem",
-        "jsCode": "const missing = [];\n\nif (!$json.customer_name) missing.push('Nama customer');\nif (!$json.vehicle) missing.push('Jenis kendaraan');\nif (!Number($json.quantity)) missing.push('Jumlah unit');\nif (!Number($json.unit_price)) missing.push('Harga per unit');\nif (!$json.pickup_location) missing.push('Lokasi jemput');\nif (!$json.destination) missing.push('Tujuan');\nif (!$json.departure_date) missing.push('Tanggal keberangkatan');\n\nreturn {\n  json: {\n    missing,\n    message:\n      'Data invoice belum lengkap.\\n\\nYang masih kurang:\\n- ' +\n      missing.join('\\n- ') +\n      '\\n\\nSilakan kirim ulang data invoice yang lengkap.'\n  }\n};"
+        "jsCode": "const missing = [];\n\nif (!$json.customer_name) missing.push('Nama customer');\nif (!$json.pickup_location) missing.push('Lokasi jemput');\nif (!$json.destination) missing.push('Tujuan');\nif (!$json.departure_date) missing.push('Tanggal keberangkatan');\n\nif (!Array.isArray($json.items) || $json.items.length === 0) {\n  missing.push('Rincian kendaraan');\n} else {\n  $json.items.forEach((item, index) => {\n    const no = index + 1;\n\n    if (!item.vehicle) {\n      missing.push(`Jenis kendaraan item ${no}`);\n    }\n\n    if (!Number(item.quantity)) {\n      missing.push(`Jumlah unit item ${no}`);\n    }\n\n    if (!Number(item.unit_price)) {\n      missing.push(`Harga per unit item ${no}`);\n    }\n\n    if (!item.price_basis) {\n      missing.push(`Basis harga item ${no}`);\n    }\n  });\n}\n\nreturn {\n  json: {\n    missing,\n    message:\n      'Data invoice belum lengkap.\\n\\nYang masih kurang:\\n- ' +\n      missing.join('\\n- ') +\n      '\\n\\nSilakan kirim ulang data invoice yang lengkap.'\n  }\n};"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -445,34 +346,6 @@
                 "type": "string",
                 "operation": "notEmpty",
                 "singleValue": true
-              }
-            },
-            {
-              "id": "bf6e2c78-76fe-45f0-a07d-d85fcf7b161d",
-              "leftValue": "={{ $json.vehicle }}",
-              "rightValue": "",
-              "operator": {
-                "type": "string",
-                "operation": "notEmpty",
-                "singleValue": true
-              }
-            },
-            {
-              "id": "03877017-50da-454a-baf0-d40242ade8ec",
-              "leftValue": "={{ $json.quantity }}",
-              "rightValue": 0,
-              "operator": {
-                "type": "number",
-                "operation": "gt"
-              }
-            },
-            {
-              "id": "586ab578-08e9-4813-aedc-51d7f4fd6fc6",
-              "leftValue": "={{ $json.unit_price }}",
-              "rightValue": 0,
-              "operator": {
-                "type": "number",
-                "operation": "gt"
               }
             },
             {
@@ -506,6 +379,16 @@
               }
             },
             {
+              "id": "586ab578-08e9-4813-aedc-51d7f4fd6fc6",
+              "leftValue": "={{ Array.isArray($json.items) && $json.items.length > 0 }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            },
+            {
               "id": "15dc280d-f58c-47ed-94d8-a5e0ce63ddda",
               "leftValue": "",
               "rightValue": "",
@@ -528,6 +411,33 @@
       ],
       "id": "f7a2168e-6a19-4b7c-885a-4d373bbcceba",
       "name": "Validate Invoice ( IF )"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const data = $json.output;\n\nfunction daysInclusive(start, end) {\n  if (!start || !end) return 1;\n\n  const startDate = new Date(start + 'T00:00:00Z');\n  const endDate = new Date(end + 'T00:00:00Z');\n\n  const diff = Math.round(\n    (endDate - startDate) / (1000 * 60 * 60 * 24)\n  );\n\n  return diff + 1;\n}\n\nconst durationDays = daysInclusive(\n  data.departure_date,\n  data.return_date\n);\n\nconst items = (data.items || []).map(item => {\n  const quantity = Number(item.quantity || 0);\n  const unitPrice = Number(item.unit_price || 0);\n\n  const billableDays =\n    item.price_basis === 'per_day'\n      ? durationDays\n      : 1;\n\n  const subtotal =\n    quantity *\n    unitPrice *\n    billableDays;\n\n  return {\n    vehicle: item.vehicle,\n    quantity,\n    unit_price: unitPrice,\n    price_basis: item.price_basis,\n    days: billableDays,\n    subtotal\n  };\n});\n\nconst total = items.reduce(\n  (sum, item) => sum + item.subtotal,\n  0\n);\n\nreturn {\n  json: {\n    customer_name: data.customer_name,\n    pickup_location: data.pickup_location,\n    destination: data.destination,\n\n    departure_date: data.departure_date,\n    return_date: data.return_date,\n    duration_days: durationDays,\n\n    items,\n\n    subtotal: total,\n    total,\n\n    included: data.included || [],\n    excluded: data.excluded || [],\n\n    payment_status: data.payment_status,\n    notes: data.notes\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        800,
+        176
+      ],
+      "id": "da0ae316-777c-4f86-9c8b-1ac96d9c76d1",
+      "name": "Calculate Invoice ( Code )"
+    },
+    {
+      "parameters": {
+        "jsCode": "const invoiceId = $('Save Invoice').item.json.id;\nconst invoice = $('Merge Invoice Data').item.json;\n\nreturn invoice.items.map(item => ({\n  json: {\n    invoice_id: invoiceId,\n    description: item.vehicle,\n    quantity: Number(item.quantity),\n    unit_price: Number(item.unit_price),\n    days: Number(item.days),\n    price_basis: item.price_basis,\n    subtotal: Number(item.subtotal)\n  }\n}));"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2144,
+        80
+      ],
+      "id": "17bc7950-941d-4609-8c2e-cf7b65131b11",
+      "name": "Prepare Invoice Items"
     }
   ],
   "connections": {
@@ -568,18 +478,7 @@
       "main": [
         [
           {
-            "node": "Calculate Invoice",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Calculate Invoice": {
-      "main": [
-        [
-          {
-            "node": "Validate Invoice ( IF )",
+            "node": "Calculate Invoice ( Code )",
             "type": "main",
             "index": 0
           }
@@ -628,7 +527,7 @@
       "main": [
         [
           {
-            "node": "Save Invoice Item",
+            "node": "Prepare Invoice Items",
             "type": "main",
             "index": 0
           }
@@ -712,6 +611,28 @@
           }
         ]
       ]
+    },
+    "Calculate Invoice ( Code )": {
+      "main": [
+        [
+          {
+            "node": "Validate Invoice ( IF )",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Invoice Items": {
+      "main": [
+        [
+          {
+            "node": "Save Invoice Item",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -725,9 +646,9 @@
   },
   "nodeGroups": [],
   "pinData": {},
-  "versionId": "04bc57fe-f071-4b0b-b70e-7bc9e6021c40",
+  "versionId": "b6a47ab2-9475-4fcf-aa8e-f72b1be0cd6c",
   "activeVersionId": null,
-  "versionCounter": 224,
+  "versionCounter": 258,
   "triggerCount": 0,
   "sourceWorkflowId": null,
   "tags": [],

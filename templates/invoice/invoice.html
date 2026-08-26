@@ -134,8 +134,9 @@ body {
 }
 
 .items tbody td {
-    padding: 12px 10px;
+    padding: 7px 10px;
     border-bottom: 1px solid #dce0e4;
+    vertical-align: middle;
 }
 
 .items .qty {
@@ -147,6 +148,14 @@ body {
     width: 135px;
     text-align: right;
     white-space: nowrap;
+}
+
+.price-basis {
+    display: block;
+    margin-top: 1px;
+    font-size: 7.5px;
+    line-height: 1.1;
+    color: #6b7280;
 }
 
 /* =========================
@@ -302,39 +311,39 @@ body {
 .signature-stack {
     position: relative;
     width: 170px;
-    height: 120px;
+    height: 95px;
     margin: 0 auto;
 }
 
 .stamp-img {
     position: absolute;
-    width: 105px;
-    height: 105px;
+    width: 100px;
+    height: 100px;
     object-fit: contain;
-    left: 28px;
-    top: 8px;
+    left: 32px;
+    top: 0;
     opacity: .78;
     z-index: 1;
 }
 
 .signature-img {
     position: absolute;
-    width: 145px;
-    max-height: 90px;
+    width: 140px;
+    max-height: 82px;
     object-fit: contain;
-    left: 18px;
-    top: 18px;
+    left: 20px;
+    top: 8px;
     z-index: 2;
 }
 
 .signature-name {
-    margin-top: 3px;
+    margin-top: 0;
     font-weight: 700;
     font-size: 13px;
 }
 
 .signature-position {
-    margin-top: 2px;
+    margin-top: 0;
     font-size: 10px;
     color: #6b7280;
 }
@@ -421,23 +430,44 @@ body {
 
 <table class="items">
 
-    <thead>
-        <tr>
-            <th>Deskripsi</th>
-            <th class="qty">Qty</th>
-            <th class="money">Harga / Unit</th>
-            <th class="money">Subtotal</th>
-        </tr>
-    </thead>
+  <thead>
+      <tr>
+          <th>Deskripsi</th>
+          <th class="qty">Unit</th>
+          <th class="qty">Hari</th>
+          <th class="money">Harga / Unit</th>
+          <th class="money">Subtotal</th>
+      </tr>
+  </thead>
 
-    <tbody>
-        <tr>
-            <td><strong>{{ vehicle }}</strong></td>
-            <td class="qty">{{ quantity }}</td>
-            <td class="money">Rp {{ unit_price_formatted }}</td>
-            <td class="money">Rp {{ subtotal_formatted }}</td>
-        </tr>
-    </tbody>
+  <tbody>
+      {% for item in items %}
+      <tr>
+          <td>
+              <strong>{{ item.vehicle }}</strong>
+          </td>
+
+          <td class="qty">
+              {{ item.quantity }}
+          </td>
+
+          <td class="qty">
+              {{ item.days }}
+          </td>
+
+          <td class="money">
+              Rp {{ item.unit_price_formatted }}<br>
+              <span class="price-basis">
+                  {{ item.price_basis_label }}
+              </span>
+          </td>
+
+          <td class="money">
+              Rp {{ item.subtotal_formatted }}
+          </td>
+      </tr>
+      {% endfor %}
+  </tbody>
 
 </table>
 
