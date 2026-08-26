@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-26T13:27:39.895Z",
+  "updatedAt": "2026-08-26T13:43:20.119Z",
   "createdAt": "2026-08-26T08:01:50.117Z",
   "id": "VGXZYmvFGYrklWrh",
   "name": "My workflow",
@@ -382,6 +382,136 @@
           "name": "Telegram account"
         }
       }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "63059de6-e545-473d-9f8c-59ca0a614d8c",
+              "leftValue": "={{ $json.customer_name }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "bf6e2c78-76fe-45f0-a07d-d85fcf7b161d",
+              "leftValue": "={{ $json.vehicle }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "03877017-50da-454a-baf0-d40242ade8ec",
+              "leftValue": "={{ $json.quantity }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            },
+            {
+              "id": "586ab578-08e9-4813-aedc-51d7f4fd6fc6",
+              "leftValue": "={{ $json.unit_price }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            },
+            {
+              "id": "b200dd1d-e5ca-44c6-8783-a7269394900a",
+              "leftValue": "={{ $json.pickup_location }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "246ec566-510d-4b6d-b49f-7082d73c5933",
+              "leftValue": "={{ $json.destination }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "ceb23f82-9420-494b-9018-d4b7fdc87ef3",
+              "leftValue": "={{ $json.departure_date }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        832,
+        368
+      ],
+      "id": "f7a2168e-6a19-4b7c-885a-4d373bbcceba",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Edit Fields').item.json.chat_id }}",
+        "text": "={{$json.message}}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1392,
+        384
+      ],
+      "id": "fe6ff4d7-688a-4d09-ac2e-f1c2301b31b7",
+      "name": "Send a text message",
+      "webhookId": "7b777fc2-60da-47f5-9483-3cdbd0993e16",
+      "credentials": {
+        "telegramApi": {
+          "id": "vPnqCbsh1nk853zE",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const missing = [];\n\nif (!$json.customer_name) missing.push('Nama customer');\nif (!$json.vehicle) missing.push('Jenis kendaraan');\nif (!Number($json.quantity)) missing.push('Jumlah unit');\nif (!Number($json.unit_price)) missing.push('Harga per unit');\nif (!$json.pickup_location) missing.push('Lokasi jemput');\nif (!$json.destination) missing.push('Tujuan');\nif (!$json.departure_date) missing.push('Tanggal keberangkatan');\n\nreturn {\n  json: {\n    missing,\n    message:\n      'Data invoice belum lengkap.\\n\\nYang masih kurang:\\n- ' +\n      missing.join('\\n- ') +\n      '\\n\\nSilakan kirim ulang data invoice yang lengkap.'\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1088,
+        400
+      ],
+      "id": "b6fb38ef-eb2d-4590-b2da-9757ad329a35",
+      "name": "Build Validation Error"
     }
   ],
   "connections": {
@@ -433,7 +563,7 @@
       "main": [
         [
           {
-            "node": "Prepare Invoice",
+            "node": "If",
             "type": "main",
             "index": 0
           }
@@ -532,6 +662,40 @@
           }
         ]
       ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Prepare Invoice",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Build Validation Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a text message": {
+      "main": [
+        []
+      ]
+    },
+    "Build Validation Error": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -545,9 +709,9 @@
   },
   "nodeGroups": [],
   "pinData": {},
-  "versionId": "9eae23db-f475-44e1-8573-59900bdb061b",
+  "versionId": "14b31ea4-d55c-45db-9e4a-54d36407a35e",
   "activeVersionId": null,
-  "versionCounter": 164,
+  "versionCounter": 205,
   "triggerCount": 0,
   "sourceWorkflowId": null,
   "tags": [],
