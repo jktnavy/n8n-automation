@@ -1,8 +1,8 @@
 {
-  "updatedAt": "2026-08-26T14:42:04.793Z",
+  "updatedAt": "2026-08-26T14:47:02.084Z",
   "createdAt": "2026-08-26T08:01:50.117Z",
   "id": "VGXZYmvFGYrklWrh",
-  "name": "My workflow",
+  "name": "STA Transport - Telegram Invoice",
   "description": null,
   "active": false,
   "isArchived": false,
@@ -18,7 +18,7 @@
       "typeVersion": 1.5,
       "position": [
         0,
-        80
+        176
       ],
       "id": "dff217d3-520e-4506-9a32-d5869ddb1d50",
       "name": "Telegram Trigger",
@@ -60,7 +60,7 @@
       "typeVersion": 3.5,
       "position": [
         224,
-        80
+        176
       ],
       "id": "2e022f64-6a78-4ce0-abdf-bfc67192b4c7",
       "name": "Edit Fields"
@@ -73,8 +73,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatDeepSeek",
       "typeVersion": 1,
       "position": [
-        528,
-        320
+        520,
+        408
       ],
       "id": "ae4d585b-3819-4225-85b2-3d2819b19921",
       "name": "DeepSeek Chat Model1",
@@ -96,7 +96,7 @@
       "typeVersion": 1.2,
       "position": [
         448,
-        80
+        176
       ],
       "id": "225e809c-ce2d-4153-99bc-43d863ebc95a",
       "name": "Information Extractor"
@@ -197,7 +197,7 @@
       "typeVersion": 3.5,
       "position": [
         800,
-        80
+        176
       ],
       "id": "8ce599e9-fd3a-4cc4-8855-4afd526a110c",
       "name": "Calculate Invoice"
@@ -232,7 +232,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.5,
       "position": [
-        1024,
+        1248,
         80
       ],
       "id": "46ee22e8-82e9-4589-a300-765259ef663c",
@@ -249,7 +249,7 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.7,
       "position": [
-        1248,
+        1472,
         160
       ],
       "id": "46626a74-a994-4337-82c1-1f6b68eb0920",
@@ -270,7 +270,7 @@
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3.2,
       "position": [
-        1472,
+        1696,
         80
       ],
       "id": "161393e2-16c0-4fb3-b877-101964fdfce2",
@@ -287,7 +287,7 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.7,
       "position": [
-        1696,
+        1920,
         80
       ],
       "id": "aceeaa89-f466-4d77-8a5b-28c04a7bff3f",
@@ -310,7 +310,7 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.7,
       "position": [
-        1920,
+        2144,
         80
       ],
       "id": "3466890a-df93-47ce-90ef-98223ca13264",
@@ -330,7 +330,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        2144,
+        2368,
         80
       ],
       "id": "9e6d3241-e04d-439e-bde8-6f96c52f18e8",
@@ -343,7 +343,7 @@
       "type": "n8n-nodes-base.executeCommand",
       "typeVersion": 1,
       "position": [
-        2368,
+        2592,
         80
       ],
       "id": "456e2fe0-7754-4bb5-b4bc-951527c6ed23",
@@ -357,7 +357,7 @@
       "type": "n8n-nodes-base.readWriteFile",
       "typeVersion": 1.1,
       "position": [
-        2592,
+        2816,
         80
       ],
       "id": "658a674c-fd95-46ef-bfa1-0c22850f181e",
@@ -376,7 +376,7 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        2816,
+        3040,
         80
       ],
       "id": "736110d8-a0f3-4d15-8f2d-241ee8ef601b",
@@ -400,8 +400,8 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        1392,
-        384
+        1472,
+        352
       ],
       "id": "fe6ff4d7-688a-4d09-ac2e-f1c2301b31b7",
       "name": "Send a text message",
@@ -421,8 +421,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1088,
-        400
+        1248,
+        352
       ],
       "id": "b6fb38ef-eb2d-4590-b2da-9757ad329a35",
       "name": "Build Validation Error"
@@ -523,8 +523,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        832,
-        368
+        1024,
+        176
       ],
       "id": "f7a2168e-6a19-4b7c-885a-4d373bbcceba",
       "name": "Validate Invoice ( IF )"
@@ -725,9 +725,9 @@
   },
   "nodeGroups": [],
   "pinData": {},
-  "versionId": "a3e23c0d-9d76-4630-af14-664601d8df03",
+  "versionId": "04bc57fe-f071-4b0b-b70e-7bc9e6021c40",
   "activeVersionId": null,
-  "versionCounter": 223,
+  "versionCounter": 224,
   "triggerCount": 0,
   "sourceWorkflowId": null,
   "tags": [],
