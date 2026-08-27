@@ -1,7 +1,7 @@
 #!/bin/bash
 
 set -a
-source /home/heden/projects/n8n-automation/.env
+source "$(cd "$(dirname "$0")/.." && pwd)/.env"
 set +a
 
 exec n8n start

@@ -4,16 +4,30 @@ import base64
 import json
 import sys
 from pathlib import Path
+from datetime import datetime
 
 from jinja2 import Environment, FileSystemLoader
 from playwright.sync_api import sync_playwright
-from datetime import datetime
 
 
-BASE_DIR = Path("/home/heden/projects/n8n-automation")
+# ============================================================
+# PATH CONFIG
+# ============================================================
+
+# File ini berada di:
+# <project>/scripts/invoice/render_invoice.py
+#
+# parents[2] = root project
+BASE_DIR = Path(__file__).resolve().parents[2]
+
 TEMPLATE_DIR = BASE_DIR / "templates" / "invoice"
+ASSET_DIR = TEMPLATE_DIR / "assets"
 OUTPUT_DIR = BASE_DIR / "output" / "invoices"
 
+
+# ============================================================
+# CONSTANTS
+# ============================================================
 
 BULAN_ID = [
     "",
@@ -32,12 +46,14 @@ BULAN_ID = [
 ]
 
 
+# ============================================================
+# DATE HELPERS
+# ============================================================
+
 def format_tanggal_indonesia(value):
-    from datetime import datetime
-
     dt = datetime.strptime(value, "%Y-%m-%d")
-
     return f"{dt.day} {BULAN_ID[dt.month]} {dt.year}"
+
 
 def format_periode_indonesia(start_date, end_date=None):
     start_dt = datetime.strptime(start_date, "%Y-%m-%d")
@@ -48,12 +64,22 @@ def format_periode_indonesia(start_date, end_date=None):
     end_dt = datetime.strptime(end_date, "%Y-%m-%d")
 
     if start_dt.year == end_dt.year and start_dt.month == end_dt.month:
-        return f"{start_dt.day} s.d. {end_dt.day} {BULAN_ID[end_dt.month]} {end_dt.year}"
+        return (
+            f"{start_dt.day} s.d. {end_dt.day} "
+            f"{BULAN_ID[end_dt.month]} {end_dt.year}"
+        )
 
     if start_dt.year == end_dt.year:
-        return f"{start_dt.day} {BULAN_ID[start_dt.month]} s.d. {end_dt.day} {BULAN_ID[end_dt.month]} {end_dt.year}"
+        return (
+            f"{start_dt.day} {BULAN_ID[start_dt.month]} "
+            f"s.d. {end_dt.day} {BULAN_ID[end_dt.month]} "
+            f"{end_dt.year}"
+        )
 
-    return f"{start_dt.day} {BULAN_ID[start_dt.month]} {start_dt.year} s.d. {end_dt.day} {BULAN_ID[end_dt.month]} {end_dt.year}"
+    return (
+        f"{start_dt.day} {BULAN_ID[start_dt.month]} {start_dt.year} "
+        f"s.d. {end_dt.day} {BULAN_ID[end_dt.month]} {end_dt.year}"
+    )
 
 
 def hitung_durasi_hari(start_date, end_date=None):
@@ -62,7 +88,13 @@ def hitung_durasi_hari(start_date, end_date=None):
 
     start_dt = datetime.strptime(start_date, "%Y-%m-%d")
     end_dt = datetime.strptime(end_date, "%Y-%m-%d")
+
     return (end_dt - start_dt).days + 1
+
+
+# ============================================================
+# NUMBER / TEXT HELPERS
+# ============================================================
 
 def terbilang_angka(n):
     n = int(n)
@@ -131,12 +163,19 @@ def terbilang_angka(n):
 
     return str(n)
 
+
 def rupiah(value):
     value = int(float(value))
     return f"{value:,}".replace(",", ".")
 
+
 def gabung_kalimat(items):
-    items = [str(i).strip() for i in (items or []) if str(i).strip()]
+    items = [
+        str(i).strip()
+        for i in (items or [])
+        if str(i).strip()
+    ]
+
     if not items:
         return ""
 
@@ -148,84 +187,206 @@ def gabung_kalimat(items):
 
     return ", ".join(items[:-1]) + f", dan {items[-1]}"
 
+
+# ============================================================
+# MAIN
+# ============================================================
+
 def main():
     if len(sys.argv) < 2:
-        raise SystemExit("Usage: render_invoice.py '<base64-json>'")
+        raise SystemExit(
+            "Usage: render_invoice.py '<base64-json>'"
+        )
+
+    # --------------------------------------------------------
+    # Decode payload
+    # --------------------------------------------------------
 
     decoded = base64.b64decode(sys.argv[1]).decode("utf-8")
     data = json.loads(decoded)
 
+    # --------------------------------------------------------
+    # Validate required project files
+    # --------------------------------------------------------
+
+    template_file = TEMPLATE_DIR / "invoice.html"
+
+    if not template_file.exists():
+        raise FileNotFoundError(
+            f"Template invoice tidak ditemukan: {template_file}"
+        )
+
+    if not ASSET_DIR.exists():
+        raise FileNotFoundError(
+            f"Folder assets tidak ditemukan: {ASSET_DIR}"
+        )
+
+    # --------------------------------------------------------
+    # Format invoice items
+    # --------------------------------------------------------
+
     for item in data.get("items", []):
-        item["unit_price_formatted"] = rupiah(item["unit_price"])
-        item["subtotal_formatted"] = rupiah(item["subtotal"])
+        item["unit_price_formatted"] = rupiah(
+            item.get("unit_price", 0)
+        )
+
+        item["subtotal_formatted"] = rupiah(
+            item.get("subtotal", 0)
+        )
 
         if item.get("price_basis") == "per_day":
             item["price_basis_label"] = "per hari"
         else:
             item["price_basis_label"] = "per perjalanan"
 
-    data["subtotal_formatted"] = rupiah(data["subtotal"])
-    data["total_formatted"] = rupiah(data["total"])
+    # --------------------------------------------------------
+    # Totals
+    # --------------------------------------------------------
 
-    data["invoice_date_formatted"] = format_tanggal_indonesia(
-        data["invoice_date"]
+    data["subtotal_formatted"] = rupiah(
+        data.get("subtotal", 0)
     )
 
-    data["invoice_date_long"] = format_tanggal_indonesia(
-        data["invoice_date"]
+    data["total_formatted"] = rupiah(
+        data.get("total", 0)
+    )
+
+    # --------------------------------------------------------
+    # Dates
+    # --------------------------------------------------------
+
+    data["invoice_date_formatted"] = (
+        format_tanggal_indonesia(
+            data["invoice_date"]
+        )
+    )
+
+    data["invoice_date_long"] = (
+        format_tanggal_indonesia(
+            data["invoice_date"]
+        )
     )
 
     return_date = data.get("return_date")
 
-    data["departure_date_formatted"] = format_tanggal_indonesia(
-        data["departure_date"]
+    data["departure_date_formatted"] = (
+        format_tanggal_indonesia(
+            data["departure_date"]
+        )
     )
 
-    data["trip_period_formatted"] = format_periode_indonesia(
+    data["trip_period_formatted"] = (
+        format_periode_indonesia(
+            data["departure_date"],
+            return_date,
+        )
+    )
+
+    data["durasi_hari"] = hitung_durasi_hari(
         data["departure_date"],
-        return_date
+        return_date,
     )
 
-    durasi_hari = hitung_durasi_hari(
-        data["departure_date"],
-        return_date
-    )
-
-    data["durasi_hari"] = durasi_hari
+    # --------------------------------------------------------
+    # Terbilang
+    # --------------------------------------------------------
 
     data["terbilang"] = (
-        terbilang_angka(data["total"]).strip() + " Rupiah"
+        terbilang_angka(
+            data.get("total", 0)
+        ).strip()
+        + " Rupiah"
     )
 
+    # --------------------------------------------------------
+    # Assets
+    # --------------------------------------------------------
+
+    logo_path = ASSET_DIR / "logo.png"
+    stamp_path = ASSET_DIR / "stamp.png"
+    signature_path = ASSET_DIR / "signature.png"
+
+    data["logo_path"] = (
+        logo_path.as_uri()
+        if logo_path.exists()
+        else ""
+    )
+
+    data["stamp_path"] = (
+        stamp_path.as_uri()
+        if stamp_path.exists()
+        else ""
+    )
+
+    data["signature_path"] = (
+        signature_path.as_uri()
+        if signature_path.exists()
+        else ""
+    )
+
+    # --------------------------------------------------------
+    # Included / excluded
+    # --------------------------------------------------------
+
+    data["included_sentence"] = gabung_kalimat(
+        data.get("included", [])
+    )
+
+    data["excluded_sentence"] = gabung_kalimat(
+        data.get("excluded", [])
+    )
+
+    # --------------------------------------------------------
+    # Jinja template
+    # --------------------------------------------------------
+
     env = Environment(
-        loader=FileSystemLoader(TEMPLATE_DIR),
+        loader=FileSystemLoader(str(TEMPLATE_DIR)),
         autoescape=True,
     )
 
     template = env.get_template("invoice.html")
 
-    data["logo_path"] = (TEMPLATE_DIR / "assets" / "logo.png").as_uri()
-    data["stamp_path"] = (TEMPLATE_DIR / "assets" / "stamp.png").as_uri()
-    data["signature_path"] = (TEMPLATE_DIR / "assets" / "signature.png").as_uri()
-
-    data["included_sentence"] = gabung_kalimat(data.get("included", []))
-    data["excluded_sentence"] = gabung_kalimat(data.get("excluded", []))
-
     html = template.render(**data)
 
-    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    # --------------------------------------------------------
+    # Output
+    # --------------------------------------------------------
 
-    safe_number = data["invoice_number"].replace("/", "-")
+    OUTPUT_DIR.mkdir(
+        parents=True,
+        exist_ok=True,
+    )
+
+    safe_number = (
+        data["invoice_number"]
+        .replace("/", "-")
+        .replace("\\", "-")
+    )
+
     html_path = OUTPUT_DIR / f"{safe_number}.html"
     pdf_path = OUTPUT_DIR / f"{safe_number}.pdf"
 
-    html_path.write_text(html, encoding="utf-8")
+    html_path.write_text(
+        html,
+        encoding="utf-8",
+    )
+
+    # --------------------------------------------------------
+    # Render PDF
+    # --------------------------------------------------------
 
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=True)
+        browser = p.chromium.launch(
+            headless=True
+        )
 
         page = browser.new_page()
-        page.goto(html_path.as_uri())
+
+        page.goto(
+            html_path.as_uri(),
+            wait_until="load",
+        )
 
         page.pdf(
             path=str(pdf_path),
@@ -241,13 +402,20 @@ def main():
 
         browser.close()
 
+    # --------------------------------------------------------
+    # Result for n8n
+    # --------------------------------------------------------
+
     print(
-        json.dumps({
-            "success": True,
-            "pdf_path": str(pdf_path),
-            "html_path": str(html_path),
-        })
+        json.dumps(
+            {
+                "success": True,
+                "pdf_path": str(pdf_path),
+                "html_path": str(html_path),
+            }
+        )
     )
+
 
 if __name__ == "__main__":
     main()

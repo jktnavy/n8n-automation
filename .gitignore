@@ -1,0 +1,19 @@
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Generated output
+output/
+
+# n8n runtime
+.n8n/
+
+# OS / editor
+.DS_Store
+.vscode/
